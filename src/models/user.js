@@ -19,6 +19,11 @@ const userSchema = new mongoose.Schema({
       message: (props) => `${props.value} is not a valid Indian phone number!`,
     },
   },
+  role: {
+    type: String,
+    enum: ["customer", "admin"],
+    default: "customer",
+  },
 });
 
 const User = mongoose.model("User", userSchema);
