@@ -19,7 +19,7 @@ Hasini_Ecommerce is a MERN (MongoDB, Express.js, React, Node.js) web application
 - Clone the forked repository to your local machine:
 
     ```bash
-    git clone https://github.com/yourusername/Hasini_Ecommerce_API.git
+    git clone https://github.com/Srinu-Bandlamudi/Hasini_Ecommerce_API.git
     ```
 
 - Change to the cloned repository directory:
@@ -34,12 +34,9 @@ Hasini_Ecommerce is a MERN (MongoDB, Express.js, React, Node.js) web application
     npm install
     ```
 
-- Create a `.env` file and set up the following:
+- Create a `.env` file and set up the .env using .env.example:
 
-    ```plaintext
-    PORT=3001
-    mongoURI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/<dbname>?retryWrites=true&w=majority
-    ```
+    
 
 - Start the application:
 
