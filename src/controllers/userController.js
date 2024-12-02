@@ -1,28 +1,21 @@
 const userService = require("../services/userService");
+const sendResponse = require("../utils/responseHandler");
 
 const signup = async (req, res) => {
   try {
     const user = await userService.signup(req.body);
-    res.status(201).json({
-      message: "User registered successfully",
-      user,
-    });
+    sendResponse(res, 201, "User registered successfully", { user });
   } catch (err) {
-    res.status(400).json({
-      error: err.message,
-    });
+    sendResponse(res, 400, null, null, err.message);
   }
 };
 
 const login = async (req, res) => {
   try {
     const token = await userService.login(req.body);
-    res.status(200).json({
-      message: "Login successful",
-      userToken: token,
-    });
+    sendResponse(res, 200, "Login successful", { userToken: token });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    sendResponse(res, 400, null, null, err.message);
   }
 };
 
@@ -32,14 +25,11 @@ const updatePhoneNumber = async (req, res) => {
       req.user._id,
       req.body.phoneNumber
     );
-    res.status(200).json({
-      message: "Phone number updated successfully",
+    sendResponse(res, 200, "Phone number updated successfully", {
       updatedUser,
     });
   } catch (err) {
-    res.status(400).json({
-      error: err.message,
-    });
+    sendResponse(res, 400, null, null, err.message);
   }
 };
 

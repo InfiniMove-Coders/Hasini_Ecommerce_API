@@ -19,7 +19,6 @@ const signup = async ({ name, phoneNumber,role }) => {
 const login = async ({ phoneNumber }) => {
   try {
     const user = await userRepository.findByPhoneNumber(phoneNumber);
-    console.log("user",user);
     if (!user) {
       throw new Error("User not found!");
     }

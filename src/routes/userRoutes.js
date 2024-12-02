@@ -6,7 +6,7 @@ const {authenticate,isAdmin}=require("../middlewares/authenticate");
 const userController = require("../controllers/userController");
 
 router.post("/signup", userController.signup);
-router.post("/login", userController.login);
-router.put("/updatePhoneNumber/", authenticate,isAdmin,userController.updatePhoneNumber);
+router.get("/login", userController.login);
+router.put("/updatePhoneNumber/", authenticate,userController.updatePhoneNumber);
 
 module.exports = router;
