@@ -16,7 +16,7 @@ const createOrder = async (req, res) => {
 
 const getOrdersByUser = async (req, res) => {
   try {
-    const orders = await orderService.getOrdersByUser(req.user._id);
+    const orders = await orderService.getOrdersByUser(req.params.id);
     sendResponse(res, 200, "Orders retrieved successfully", { orders });
   } catch (error) {
     sendResponse(res, 400, null, null, error.message);

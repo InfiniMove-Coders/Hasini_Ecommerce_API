@@ -2,7 +2,8 @@ const Order = require("../models/order");
 
 async function createOrder(orderData) {
   try {
-    return await Order.create(orderData);
+    const order = new Order(orderData);
+    return order.save();
   } catch (error) {
     // console.error("Error creating order:", error);
     throw new Error("Failed to create order");

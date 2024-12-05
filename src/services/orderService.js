@@ -1,13 +1,13 @@
 const orderRepository = require("../repositories/orderRepository");
-const productService = require("../services/productService");
+const productModel = require("../models/product");
 
 async function createOrder(data) {
   try {
     let totalPrice = 0;
     for (const item of data.products) {
-      const product = await productService.getProductById(item.productId);
+      const product = await productModel.findById(item.product);
       if (!product) {
-        throw new Error(`Product with ID ${item.productId} not found`);
+        throw new Error(`Product with ID ${item.product} not found`);
       }
       if (product.stock < item.quantity) {
         throw new Error(`Not enough stock for product ${product.name}`);
@@ -19,9 +19,9 @@ async function createOrder(data) {
 
     // Promise.all(
     //   data.products.map(async (item) => {
-    //     const product = await productService.getProductById(item.productId);
+    //     const product = await productService.getProductById(item.product);
     //     if (!product) {
-    //       throw new Error(`Product with ID ${item.productId} not found`);
+    //       throw new Error(`Product with ID ${item.product} not found`);
     //     }
     //     if (product.stock < item.quantity) {
     //       throw new Error(`Not enough stock for product ${product.name}`);
@@ -42,7 +42,7 @@ async function createOrder(data) {
     //     );
     //   })
     // );
-
+    console.log(data);
     return await orderRepository.createOrder(data);
   } catch (error) {
     throw new Error(`Create order failed: ${error.message}`);
