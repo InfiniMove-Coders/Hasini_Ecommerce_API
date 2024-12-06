@@ -1,13 +1,12 @@
-const User = require('../models/user');
-
+const User = require("../models/user");
 
 const findById = async (userId) => {
-    try {
-      return await User.findById(userId);
-    } catch (error) {
-      throw new Error(`Error finding user by ID: ${error.message}`);
-    }
-  };
+  try {
+    return await User.findById(userId);
+  } catch (error) {
+    throw new Error(`Error finding user by ID: ${error.message}`);
+  }
+};
 
 const findByPhoneNumber = async (phoneNumber) => {
   try {
@@ -17,9 +16,9 @@ const findByPhoneNumber = async (phoneNumber) => {
   }
 };
 
-const create = async ({ name, phoneNumber }) => {
+const create = async ({ name, phoneNumber, role }) => {
   try {
-    const user = new User({ name, phoneNumber });
+    const user = new User({ name, phoneNumber, role });
     await user.save();
     return user;
   } catch (error) {
@@ -29,12 +28,16 @@ const create = async ({ name, phoneNumber }) => {
 
 const updatePhoneNumber = async (userId, newPhoneNumber) => {
   try {
-    const user = await User.findByIdAndUpdate(userId, { phoneNumber: newPhoneNumber }, { new: true });
-    console.log("repo",user);
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { phoneNumber: newPhoneNumber },
+      { new: true }
+    );
+    console.log("repo", user);
     return user;
   } catch (error) {
     throw new Error(`Error updating phone number: ${error.message}`);
   }
 };
 
-module.exports = { findByPhoneNumber, create, updatePhoneNumber,findById };
+module.exports = { findByPhoneNumber, create, updatePhoneNumber, findById };
