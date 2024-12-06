@@ -42,7 +42,7 @@ async function createOrder(data) {
     //     );
     //   })
     // );
-    console.log(data);
+
     return await orderRepository.createOrder(data);
   } catch (error) {
     throw new Error(`Create order failed: ${error.message}`);
@@ -81,9 +81,22 @@ async function getOrdersByStatus(status) {
   }
 }
 
-async function updateOrderDetails(orderId, updateData) {
+async function updateOrderDetails(orderId, data) {
   try {
-    return await orderRepository.updateOrderDetails(orderId, updateData);
+    let totalPrice = 0;
+    for (const item of data.products) {
+      const product = await productModel.findById(item.product);
+      if (!product) {
+        throw new Error(`Product with ID ${item.product} not found`);
+      }
+      if (product.stock < item.quantity) {
+        throw new Error(`Not enough stock for product ${product.name}`);
+      }
+      totalPrice += product.price * item.quantity;
+      item.price = product.price;
+    }
+    data.totalPrice = totalPrice;
+    return await orderRepository.updateOrderDetails(orderId, data);
   } catch (error) {
     throw new Error(`Update order failed: ${error.message}`);
   }

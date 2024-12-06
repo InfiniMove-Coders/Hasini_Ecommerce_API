@@ -16,7 +16,7 @@ router.get(
   orderController.getOrdersByStatus
 );
 
-router.patch("/:id", authenticate, orderController.updateOrderDetails);
+router.put("/:id", authenticate, orderController.updateOrderDetails);
 router.patch(
   "/:id/status",
   authenticate,
