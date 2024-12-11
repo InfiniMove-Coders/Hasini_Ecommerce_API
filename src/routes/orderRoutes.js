@@ -1,9 +1,9 @@
 const express = require("express");
-const orderController = require("../controllers/orderController");
-
+const OrderController = require("../controllers/orderController");
 const { authenticate, isAdmin } = require("../middlewares/authenticate");
 
 const router = express.Router();
+const orderController = new OrderController();
 
 router.get("/", authenticate, isAdmin, orderController.getAllOrders);
 router.post("/", authenticate, orderController.createOrder);
@@ -15,8 +15,6 @@ router.get(
   isAdmin,
   orderController.getOrdersByStatus
 );
-
-router.put("/:id", authenticate, orderController.updateOrderDetails);
 router.patch(
   "/:id/status",
   authenticate,
