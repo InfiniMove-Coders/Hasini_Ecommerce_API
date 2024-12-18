@@ -41,7 +41,7 @@ const orderSchema = new mongoose.Schema(
     deliveryTimeSlot: {
       type: String,
       required: true,
-      match: /^([01]?[0-9]):[0-5][0-9] (AM|PM) - ([01]?[0-9]):[0-5][0-9] (AM|PM)$/, // Validates format HH:MM AM/PM - HH:MM AM/PM
+      match: /^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM) - (0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/, // Validates format HH:MM AM/PM - HH:MM AM/PM
     }
     // paymentMethod: {
     //   type: String,
