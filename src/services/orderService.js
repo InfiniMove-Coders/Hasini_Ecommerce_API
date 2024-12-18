@@ -1,121 +1,76 @@
-const orderRepository = require("../repositories/orderRepository");
-const productModel = require("../models/product");
+const OrderRepository = require("../repositories/orderRepository");
+const ProductRepository = require("../repositories/productRepository");
 
-async function createOrder(data) {
-  try {
-    let totalPrice = 0;
-    for (const item of data.products) {
-      const product = await productModel.findById(item.product);
-      if (!product) {
-        throw new Error(`Product with ID ${item.product} not found`);
-      }
-      if (product.stock < item.quantity) {
-        throw new Error(`Not enough stock for product ${product.name}`);
-      }
-      totalPrice += product.price * item.quantity;
-      item.price = product.price;
+class OrderService {
+  constructor() {
+    this.productRepository = new ProductRepository();
+    this.orderRepository = new OrderRepository();
+  }
+
+  createOrder = async (data) => {
+    try {
+      let totalPrice = 0;
+      const products = await this.productRepository.findAll(
+        { _id: { $in: data.products.map(p => p.product) } }
+      );
+      data.products.forEach(orderProduct => {
+        const product = products.find(p => p._id.toString() === orderProduct.product.toString());
+        if (!product) {
+          throw new Error(`Product with ID ${orderProduct.product} not found`);
+        }
+        if (product.stock < orderProduct.quantity) {
+          throw new Error(`Not enough stock for product ${product.name}`);
+        }
+        totalPrice += product.price * orderProduct.quantity;
+        orderProduct.price = product.price;
+      });
+      data.totalPrice = totalPrice;
+
+      return await this.orderRepository.create(data);
+    } catch (error) {
+      throw new Error(`Create order failed: ${error.message}`);
     }
-    data.totalPrice = totalPrice;
+  };
 
-    // Promise.all(
-    //   data.products.map(async (item) => {
-    //     const product = await productService.getProductById(item.product);
-    //     if (!product) {
-    //       throw new Error(`Product with ID ${item.product} not found`);
-    //     }
-    //     if (product.stock < item.quantity) {
-    //       throw new Error(`Not enough stock for product ${product.name}`);
-    //     }
-    //     item.price = product.price;
-    //   })
-    // );
-    // data.totalPrice = data.products.reduce(
-    //   (total, item) => total + item.price * item.quantity,
-    //   0
-    // );
-
-    // Promise.all(
-    //   data.products.map(async (item) => {
-    //     await productService.updateProductStock(
-    //       item.product,
-    //       product.stock - item.quantity
-    //     );
-    //   })
-    // );
-
-    return await orderRepository.createOrder(data);
-  } catch (error) {
-    throw new Error(`Create order failed: ${error.message}`);
-  }
-}
-
-async function getOrderById(id) {
-  try {
-    return await orderRepository.getOrderById(id);
-  } catch (error) {
-    throw new Error(`Get order failed: ${error.message}`);
-  }
-}
-
-async function getAllOrders() {
-  try {
-    return await orderRepository.getAllOrders();
-  } catch (error) {
-    throw new Error(`Get orders failed: ${error.message}`);
-  }
-}
-
-async function getOrdersByUser(userId) {
-  try {
-    return await orderRepository.getOrdersByUser(userId);
-  } catch (error) {
-    throw new Error(`Get orders by user failed: ${error.message}`);
-  }
-}
-
-async function getOrdersByStatus(status) {
-  try {
-    return await orderRepository.getOrdersByStatus(status);
-  } catch (error) {
-    throw new Error(`Get orders by status failed: ${error.message}`);
-  }
-}
-
-async function updateOrderDetails(orderId, data) {
-  try {
-    let totalPrice = 0;
-    for (const item of data.products) {
-      const product = await productModel.findById(item.product);
-      if (!product) {
-        throw new Error(`Product with ID ${item.product} not found`);
-      }
-      if (product.stock < item.quantity) {
-        throw new Error(`Not enough stock for product ${product.name}`);
-      }
-      totalPrice += product.price * item.quantity;
-      item.price = product.price;
+  getOrderById = async (id) => {
+    try {
+      return await this.orderRepository.findById(id);
+    } catch (error) {
+      throw new Error(`Get order failed: ${error.message}`);
     }
-    data.totalPrice = totalPrice;
-    return await orderRepository.updateOrderDetails(orderId, data);
-  } catch (error) {
-    throw new Error(`Update order failed: ${error.message}`);
-  }
+  };
+
+  getAllOrders = async () => {
+    try {
+      return await this.orderRepository.findAll();
+    } catch (error) {
+      throw new Error(`Get orders failed: ${error.message}`);
+    }
+  };
+
+  getOrdersByUser = async (userId) => {
+    try {
+      return await this.orderRepository.findAll({ user: userId });
+    } catch (error) {
+      throw new Error(`Get orders by user failed: ${error.message}`);
+    }
+  };
+
+  getOrdersByStatus = async (status) => {
+    try {
+      return await this.orderRepository.findAll({ status });
+    } catch (error) {
+      throw new Error(`Get orders by status failed: ${error.message}`);
+    }
+  };
+
+  updateOrderStatus = async (orderId, status) => {
+    try {
+      return await this.orderRepository.updateById(orderId, { status });
+    } catch (error) {
+      throw new Error(`Update order status failed: ${error.message}`);
+    }
+  };
 }
 
-async function updateOrderStatus(orderId, status) {
-  try {
-    return await orderRepository.updateOrderStatus(orderId, status);
-  } catch (error) {
-    throw new Error(`Update order status failed: ${error.message}`);
-  }
-}
-
-module.exports = {
-  createOrder,
-  getOrderById,
-  getAllOrders,
-  getOrdersByUser,
-  getOrdersByStatus,
-  updateOrderDetails,
-  updateOrderStatus,
-};
+module.exports = OrderService;
