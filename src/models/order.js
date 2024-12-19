@@ -31,7 +31,7 @@ const orderSchema = new mongoose.Schema(
       default: "pending",
     },
     totalPrice: {
-      type: Number,
+      type: Number,             
       required: true,
       min: 0,
     },
@@ -41,7 +41,12 @@ const orderSchema = new mongoose.Schema(
     deliveryTimeSlot: {
       type: String,
       required: true,
-      match: /^([01]?[0-9]):[0-5][0-9] (AM|PM) - ([01]?[0-9]):[0-5][0-9] (AM|PM)$/, // Validates format HH:MM AM/PM - HH:MM AM/PM
+      match: /^([01]?[0-9]):[0-5][0-9] (AM|PM) - ([01]?[0-9]):[0-5][0-9] (AM|PM)$/,
+    },
+    shippingAddress: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Address",
+      required: true,
     }
     // paymentMethod: {
     //   type: String,
