@@ -37,12 +37,18 @@ const orderSchema = new mongoose.Schema(
     },
     deliveryAt: {
       type: Date,
+      required: true,
     },
     deliveryTimeSlot: {
       type: String,
       required: true,
-      match: /^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM) - (0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/, // Validates format HH:MM AM/PM - HH:MM AM/PM
-    }
+      match: /^(0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM) - (0?[1-9]|1[0-2]):[0-5][0-9] (AM|PM)$/, // HH:MM AM/PM - HH:MM AM/PM
+    },
+    shippingAddress: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Address",
+      required: true,
+    },
     // paymentMethod: {
     //   type: String,
     //   enum: ["Credit Card", "PayPal", "Cash on Delivery"],

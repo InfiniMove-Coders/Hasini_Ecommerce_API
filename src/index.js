@@ -11,6 +11,10 @@ app.use(bodyparser.urlencoded({ extended: true }));
 
 app.use('/api', apiRoutes);
 
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
 app.listen(PORT, async () => {
   console.log(`Server started at ${PORT}`);
   connectDB();

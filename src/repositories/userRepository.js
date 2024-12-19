@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Cart = require("../models/cart");
 
 const findById = async (userId) => {
   try {
@@ -20,6 +21,13 @@ const create = async ({ name, phoneNumber, role }) => {
   try {
     const user = new User({ name, phoneNumber, role });
     await user.save();
+
+    // Create an empty cart for non-admin users
+    if (role !== "admin") {
+      const cart = new Cart({ userId: user._id, items: [] });
+      await cart.save();
+    }
+
     return user;
   } catch (error) {
     throw new Error(`Error creating user: ${error.message}`);
