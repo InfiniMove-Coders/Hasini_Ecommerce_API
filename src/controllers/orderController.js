@@ -12,6 +12,8 @@ class OrderController {
         user: req.user._id,
         products: req.body.products,
         deliveryTimeSlot: req.body.deliveryTimeSlot,
+        deliveryAt: req.body.deliveryAt,
+        shippingAddress: req.body.shippingAddress,
       };
       const order = await this.orderService.createOrder(orderData);
       sendResponse(res, 201, "Order created successfully", { order });
@@ -25,7 +27,7 @@ class OrderController {
       const orders = await this.orderService.getOrdersByUser(req.params.id);
       sendResponse(res, 200, "Orders retrieved successfully", { orders });
     } catch (error) {
-      sendResponse(res, 400, null, "fee", error.message);
+      sendResponse(res, 400, null, null, error.message);
     }
   };
 
@@ -40,7 +42,8 @@ class OrderController {
 
   getAllOrders = async (req, res) => {
     try {
-      const orders = await this.orderService.getAllOrders();
+      const filters = req.query;
+      const orders = await this.orderService.getAllOrders(filters);
       sendResponse(res, 200, "Orders retrieved successfully", { orders });
     } catch (error) {
       sendResponse(res, 400, null, null, error.message);
@@ -49,7 +52,9 @@ class OrderController {
 
   getOrdersByStatus = async (req, res) => {
     try {
-      const orders = await this.orderService.getOrdersByStatus(req.params.status);
+      const orders = await this.orderService.getOrdersByStatus(
+        req.params.status
+      );
       sendResponse(res, 200, "Orders retrieved successfully", { orders });
     } catch (error) {
       sendResponse(res, 400, null, null, error.message);

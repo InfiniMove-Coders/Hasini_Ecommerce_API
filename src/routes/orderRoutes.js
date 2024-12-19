@@ -9,12 +9,6 @@ router.get("/", authenticate, isAdmin, orderController.getAllOrders);
 router.post("/", authenticate, orderController.createOrder);
 router.get("/:id", authenticate, orderController.getOrderById);
 router.get("/user/:id", authenticate, orderController.getOrdersByUser);
-router.get(
-  "/status/:status",
-  authenticate,
-  isAdmin,
-  orderController.getOrdersByStatus
-);
 router.patch(
   "/:id/status",
   authenticate,

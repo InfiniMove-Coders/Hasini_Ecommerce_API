@@ -16,8 +16,9 @@ class OrderRepository extends CrudRepository {
 
   findAll = async (filter = {}) => {
     try {
-      return await this.model.find(filter)
-        .populate("products.product user")
+      return await this.model
+        .find(filter)
+        .populate("products.product user shippingAddress")
         .sort({ createdAt: -1 });
     } catch (error) {
       throw new Error("Failed to retrieve orders");
