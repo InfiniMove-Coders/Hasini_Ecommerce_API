@@ -1,3 +1,4 @@
+const  mongoose = require("mongoose");
 const ProductService = require("../services/productService");
 
 class ProductController {
@@ -39,7 +40,11 @@ class ProductController {
 
   getAllProducts = async (req, res) => {
     try {
-      const products = await this.productService.getAllProducts(req.query);
+      const filters = req.query;
+      if (filters.category){
+        filters.category = new mongoose.Types.ObjectId(filters.category);
+      }
+      const products = await this.productService.getAllProducts(filters);
       res.status(200).json({
         message: "Products retrieved successfully",
         products,
@@ -114,6 +119,7 @@ class ProductController {
       res.status(500).json({ message: error.message });
     }
   };
+
 }
 
 module.exports = new ProductController();

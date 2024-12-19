@@ -10,11 +10,13 @@ class OrderService {
   createOrder = async (data) => {
     try {
       let totalPrice = 0;
-      const products = await this.productRepository.findAll(
-        { _id: { $in: data.products.map(p => p.product) } }
-      );
-      data.products.forEach(orderProduct => {
-        const product = products.find(p => p._id.toString() === orderProduct.product.toString());
+      const products = await this.productRepository.findAll({
+        _id: { $in: data.products.map((p) => p.product) },
+      });
+      data.products.forEach((orderProduct) => {
+        const product = products.find(
+          (p) => p._id.toString() === orderProduct.product.toString()
+        );
         if (!product) {
           throw new Error(`Product with ID ${orderProduct.product} not found`);
         }
@@ -40,9 +42,9 @@ class OrderService {
     }
   };
 
-  getAllOrders = async () => {
+  getAllOrders = async (filters) => {
     try {
-      return await this.orderRepository.findAll();
+      return await this.orderRepository.findAll(filters);
     } catch (error) {
       throw new Error(`Get orders failed: ${error.message}`);
     }

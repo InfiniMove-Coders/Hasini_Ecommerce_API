@@ -11,7 +11,7 @@ const cartRoutes = require("./cartRoutes");
 router.use("/user", userRoutes);
 router.use("/products", productRoutes);
 router.use("/category", categoryRoutes);
-router.use("/order", orderRoutes);
+router.use("/orders", orderRoutes);
 router.use("/address", addressRoutes);
 router.use("/cart", cartRoutes);
 
