@@ -40,7 +40,8 @@ class ProductService {
 
   async getAllProducts(query) {
     try {
-      return await this.productRepository.findAll(query);
+      const { page, pageSize, ...filters } = query;
+      return await this.productRepository.findAll(filters, { page, pageSize });
     } catch (error) {
       throw new Error(`Error while fetching all products: ${error.message}`);
     }
