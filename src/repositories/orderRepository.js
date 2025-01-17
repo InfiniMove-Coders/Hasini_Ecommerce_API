@@ -19,6 +19,29 @@ class OrderRepository extends CrudRepository {
       throw new Error("Failed to retrieve order");
     }
   };
+
+  findAll = async (filters = {}) => {
+    try {
+      let { page, pageSize, ...queryFilters } = filters;
+      let query = this.model
+        .find(queryFilters)
+        .populate("products.product user shippingAddress")
+        .sort({ createdAt: -1 });
+      if (page && pageSize) {
+        page = parseInt(page);
+        pageSize = parseInt(pageSize);
+        const skip = (page - 1) * pageSize;
+        console.log(skip, pageSize);
+        query = query.skip(skip).limit(pageSize);
+      }
+
+      const orders = await query.exec();
+      console.log(orders);
+      return orders;
+    } catch (error) {
+      throw new Error("Failed to retrieve orders");
+    }
+  };
 }
 
 // Export the OrderRepository class for use in other parts of the application
