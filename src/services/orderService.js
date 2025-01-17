@@ -44,15 +44,29 @@ class OrderService {
 
   getAllOrders = async (filters) => {
     try {
-      return await this.orderRepository.findAll(filters);
+      let { page, pageSize, ...queryFilters } = filters;
+      // console.log(page, pageSize, queryFilters);
+
+      return this.orderRepository.findAll(
+        queryFilters,
+        {
+          page,
+          pageSize,
+        },
+        "products.product user shippingAddress"
+      );
     } catch (error) {
-      throw new Error(`Get orders failed: ${error.message}`);
+      throw new Error("Failed to retrieve orders");
     }
   };
 
   getOrdersByUser = async (userId) => {
     try {
-      return await this.orderRepository.findAll({ user: userId });
+      return await this.orderRepository.findAll(
+        { user: userId },
+        {},
+        "products.product user shippingAddress"
+      );
     } catch (error) {
       throw new Error(`Get orders by user failed: ${error.message}`);
     }
