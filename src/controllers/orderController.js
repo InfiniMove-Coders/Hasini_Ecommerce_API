@@ -32,22 +32,6 @@ class OrderController {
     }
   };
 
-  // Method to retrieve all orders
-  getAllOrders = async (req, res) => {
-    try {
-      const filters = req.query;
-      if (filters.user) {
-        filters.user = new mongoose.Types.ObjectId(filters.user);
-      }
-      const orders = await this.orderService.getAllOrders(filters);
-      sendResponse(res, 200, "Orders retrieved successfully", { orders });
-
-    } catch (error) {
-      // Send an error response if retrieval fails
-      sendResponse(res, 400, null, null, error.message);
-    }
-  };
-
   // Method to retrieve a specific order by ID
   getOrderById = async (req, res) => {
     try {
