@@ -32,7 +32,7 @@ class OrderController {
     }
   };
 
-  // Method to retrieve a specific order by ID
+
   getOrderById = async (req, res) => {
     try {
       const order = await this.orderService.getOrderById(req.params.id);
@@ -48,6 +48,7 @@ class OrderController {
       if (filters.user) {
         filters.user = new mongoose.Types.ObjectId(filters.user);
       }
+
       const orders = await this.orderService.getAllOrders(filters);
       sendResponse(res, 200, "Orders retrieved successfully", { orders });
     } catch (error) {

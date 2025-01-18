@@ -41,7 +41,8 @@ class ProductController {
   getAllProducts = async (req, res) => {
     try {
       const filters = req.query;
-      if (filters.category) {
+
+      if (filters.category){
         filters.category = new mongoose.Types.ObjectId(filters.category);
       }
       const products = await this.productService.getAllProducts(filters);

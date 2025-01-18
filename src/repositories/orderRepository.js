@@ -13,6 +13,7 @@ class OrderRepository extends CrudRepository {
       throw new Error("Failed to retrieve order");
     }
   };
+
 }
 
 module.exports = OrderRepository;
