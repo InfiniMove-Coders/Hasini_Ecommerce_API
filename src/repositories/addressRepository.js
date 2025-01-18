@@ -1,34 +1,20 @@
-const Address = require("../models/address");
-const CrudRepository = require("./crudRepository");
+const CrudRepository = require("./crudRepository"); // Adjust the path as needed
+const Address = require("../models/address"); // Assuming you have an Address model
 
 class AddressRepository extends CrudRepository {
   constructor() {
-    super(Address);
+    super(Address); // Pass Address model to CrudRepository
   }
-
-  findById = async (id) => {
+  async findByUserId(userId) {
     try {
-      return await this.model.findById(id);
-    } catch (error) {
-      throw new Error("Failed to retrieve address");
-    }
-  };
+      const userAddress=await Address.find({ userId });
+      console.log("userAddress",userAddress);
 
-  findByFullName = async (fullName) => {
-    try {
-      return await this.model.findOne({ fullName });
+      return userAddress;
     } catch (error) {
-      throw new Error("Failed to retrieve address");
+      throw new Error(`Error finding addresses by user ID: ${error.message}`);
     }
-  };
-
-  findAll = async (filter = {}) => {
-    try {
-      return await this.model.find(filter).sort({ createdAt: -1 });
-    } catch (error) {
-      throw new Error("Failed to retrieve addresses");
-    }
-  };
+  } 
 }
 
 module.exports = AddressRepository;

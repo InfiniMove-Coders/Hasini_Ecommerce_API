@@ -1,22 +1,14 @@
 const AddressService = require('../services/addressService');
 
 class AddressController {
-  async getAllAddresses(req, res) {
-    try {
-      const addresses = await AddressService.getAllAddresses();
-      res.json(addresses);
-    } catch (error) {
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
-  }
-
   async createAddress(req, res) {
     try {
-      const data = req.body;
+      const userId = req.user._id;
+      const data = { ...req.body, userId };
       const address = await AddressService.createAddress(data);
-      res.json(address);
+      res.status(201).json(address);
     } catch (error) {
-      res.status(400).json({ message: 'Invalid request' });
+      res.status(400).json({ message: error.message});
     }
   }
 
@@ -24,19 +16,25 @@ class AddressController {
     try {
       const id = req.params.id;
       const address = await AddressService.getAddressById(id);
+      if (!address) {
+        return res.status(404).json({ message: 'Address not found' });
+      }
       res.json(address);
     } catch (error) {
-      res.status(404).json({ message: 'Address not found' });
+      res.status(500).json({ message: 'Internal Server Error' });
     }
   }
 
   async getAddressesByUser(req, res) {
     try {
-      const userId = req.params.id;
+      const userId = req.user._id;
       const addresses = await AddressService.getAddressesByUser(userId);
+      if (!addresses || addresses.length === 0) {
+        return res.status(404).json({ message: 'No addresses found for this user' });
+      }
       res.json(addresses);
     } catch (error) {
-      res.status(404).json({ message: 'User not found' });
+      res.status(500).json({ message: 'Internal Server Error' });
     }
   }
 
@@ -44,8 +42,11 @@ class AddressController {
     try {
       const id = req.params.id;
       const data = req.body;
-      const address = await AddressService.updateAddress(id, data);
-      res.json(address);
+      const updatedAddress = await AddressService.updateAddress(id, data);
+      if (!updatedAddress) {
+        return res.status(404).json({ message: 'Address not found' });
+      }
+      res.json(updatedAddress);
     } catch (error) {
       res.status(400).json({ message: 'Invalid request' });
     }
@@ -53,8 +54,12 @@ class AddressController {
 
   async deleteAddress(req, res) {
     try {
-      const id = req.params.id;
-      await AddressService.deleteAddress(id);
+      const addressId = req.params.id;
+      const userId=req.user._id;
+      const address = await AddressService.deleteAddress(userId,addressId);
+      if (!address) {
+        return res.status(404).json({ message: 'Address not found' });
+      }
       res.json({ message: 'Address deleted successfully' });
     } catch (error) {
       res.status(500).json({ message: 'Internal Server Error' });
@@ -62,4 +67,4 @@ class AddressController {
   }
 }
 
-module.exports = AddressController; 
+module.exports = AddressController;

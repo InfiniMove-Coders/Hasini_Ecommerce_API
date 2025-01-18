@@ -12,19 +12,18 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type:mongoose.Schema.Types.ObjectId,
+    ref: "Category",
     required: true,
   },
   brand: {
     type: String,
     required: true,
   },
-  pieces: {
-    type: Number,
-    required: true,
+  unitsPerPack: {
+    type: Number
   },
-  weight: {
-    type: Number,
-    required: true,
+  specifications: {
+    type: String  // For example: "500g", "1L", "2kg", etc.
   },
   price: {
     type: Number,
