@@ -68,22 +68,6 @@ class ProductController {
       res.status(500).json({ message: error.message });
     }
   };
-
-  updateProductStock = async (req, res) => {
-    try {
-      const product = await this.productService.updateProductStock(
-        req.params.id,
-        req.body.stock
-      );
-      res.status(200).json({
-        message: "Product stock updated successfully",
-        product,
-      });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
-
   getActiveProducts = async (req, res) => {
     try {
       const products = await this.productService.getActiveProducts(req.query);

@@ -1,43 +1,42 @@
-const cardService = require("../services/cartService");
+const CartService = require("../services/cartService");
 const sendResponse = require("../utils/responseHandler");
 
 class CartController {
   constructor() {
-    this.cartService = new cardService();
+    this.cartService = new CartService();
   }
 
-  getCartByUserId = async (req, res) => {
+  getCartByUser = async (req, res) => {
     try {
-      console.log(req.user._id);
-      const cart = await this.cartService.getCartByUserId(req.user._id);
-      sendResponse(res, 200, "Cart retrieved successfully", { cart });
+      const userId = req.user._id;
+      const cart = await this.cartService.getCartByUser(userId);
+      if (!cart) {
+        return res.status(404).json({ message: "You Didn't added Items Yet" });
+      }
+
+      res.status(200).json({ data:cart });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Failed to fetch the cart" });
+    }
+  };
+
+  addToCart = async (req, res) => {
+    try {
+      const cart = await this.cartService.addToCart(req.user._id, req.body);
+      sendResponse(res, 200, "Product added to cart", { cart });
     } catch (error) {
       sendResponse(res, 400, null, null, error.message);
     }
   };
 
-  addItemToCart = async (req, res) => {
+  removeFromCart = async (req, res) => {
     try {
-      const { productId, quantity } = req.body;
-      const cart = await this.cartService.addItemToCart(
+      const cart = await this.cartService.removeFromCart(
         req.user._id,
-        productId,
-        parseInt(quantity)
+        req.params.itemId
       );
-      sendResponse(res, 201, "Item added to cart successfully", { cart });
-    } catch (error) {
-      sendResponse(res, 400, null, null, error.message);
-    }
-  };
-
-  removeItemFromCart = async (req, res) => {
-    try {
-      const { productId } = req.body;
-      const cart = await this.cartService.removeItemFromCart(
-        req.user._id,
-        productId
-      );
-      sendResponse(res, 200, "Item removed from cart successfully", { cart });
+      sendResponse(res, 200, "Product removed from cart", { cart });
     } catch (error) {
       sendResponse(res, 400, null, null, error.message);
     }
@@ -45,13 +44,12 @@ class CartController {
 
   updateItemQuantity = async (req, res) => {
     try {
-      const { productId, quantity } = req.body;
       const cart = await this.cartService.updateItemQuantity(
         req.user._id,
-        productId,
-        parseInt(quantity)
+        req.params.itemId,
+        req.body.quantity
       );
-      sendResponse(res, 200, "Item quantity updated successfully", { cart });
+      sendResponse(res, 200, "Cart item quantity updated", { cart });
     } catch (error) {
       sendResponse(res, 400, null, null, error.message);
     }
@@ -60,11 +58,20 @@ class CartController {
   clearCart = async (req, res) => {
     try {
       const cart = await this.cartService.clearCart(req.user._id);
-      sendResponse(res, 200, "Cart cleared successfully", { cart });
+      sendResponse(res, 200, "Cart cleared", { cart });
+    } catch (error) {
+      sendResponse(res, 400, null, null, error.message);
+    }
+  };
+
+  validateCart = async (req, res) => {
+    try {
+      const cart = await this.cartService.validateCart(req.user._id);
+      sendResponse(res, 200, "Cart validated", { cart });
     } catch (error) {
       sendResponse(res, 400, null, null, error.message);
     }
   };
 }
 
-module.exports = new CartController();
+module.exports = CartController;
