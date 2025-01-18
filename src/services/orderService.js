@@ -1,5 +1,6 @@
 const OrderRepository = require("../repositories/orderRepository");
 const ProductRepository = require("../repositories/productRepository");
+const userRepository = require("../repositories/userRepository");
 
 class OrderService {
   constructor() {
@@ -44,7 +45,8 @@ class OrderService {
 
   getAllOrders = async (filters) => {
     try {
-      let { page, pageSize, minPrice, maxPrice, ...queryFilters } = filters;
+      let { page, pageSize, minPrice, maxPrice, phoneNumber, ...queryFilters } =
+        filters;
 
       if (minPrice) {
         queryFilters.totalPrice = {
@@ -58,6 +60,14 @@ class OrderService {
           ...(queryFilters.totalPrice || {}),
           $lte: maxPrice,
         };
+      }
+
+      if (phoneNumber) {
+        const user = await userRepository.findByPhoneNumber(phoneNumber);
+        if (!user) {
+          throw new Error(`User with phone number ${phoneNumber} not found`);
+        }
+        queryFilters.user = user._id;
       }
 
       return this.orderRepository.findAll(
