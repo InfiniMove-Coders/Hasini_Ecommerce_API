@@ -40,7 +40,16 @@ class ProductService {
 
   async getAllProducts(query) {
     try {
-      return await this.productRepository.findAll(query);
+      const { page, pageSize, minPrice, maxPrice, ...filters } = query;
+      if (minPrice) {
+        filters.price = { ...(filters.price || {}), $gte: minPrice };
+      }
+
+      if (maxPrice) {
+        filters.price = { ...(filters.price || {}), $lte: maxPrice };
+      }
+
+      return await this.productRepository.findAll(filters, { page, pageSize });
     } catch (error) {
       throw new Error(`Error while fetching all products: ${error.message}`);
     }

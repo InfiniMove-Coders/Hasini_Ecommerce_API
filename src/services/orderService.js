@@ -44,15 +44,42 @@ class OrderService {
 
   getAllOrders = async (filters) => {
     try {
-      return await this.orderRepository.findAll(filters);
+      let { page, pageSize, minPrice, maxPrice, ...queryFilters } = filters;
+
+      if (minPrice) {
+        queryFilters.totalPrice = {
+          ...(queryFilters.totalPrice || {}),
+          $gte: minPrice,
+        };
+      }
+
+      if (maxPrice) {
+        queryFilters.totalPrice = {
+          ...(queryFilters.totalPrice || {}),
+          $lte: maxPrice,
+        };
+      }
+
+      return this.orderRepository.findAll(
+        queryFilters,
+        {
+          page,
+          pageSize,
+        },
+        "products.product user shippingAddress"
+      );
     } catch (error) {
-      throw new Error(`Get orders failed: ${error.message}`);
+      throw new Error("Failed to retrieve orders");
     }
   };
 
   getOrdersByUser = async (userId) => {
     try {
-      return await this.orderRepository.findAll({ user: userId });
+      return await this.orderRepository.findAll(
+        { user: userId },
+        {},
+        "products.product user shippingAddress"
+      );
     } catch (error) {
       throw new Error(`Get orders by user failed: ${error.message}`);
     }

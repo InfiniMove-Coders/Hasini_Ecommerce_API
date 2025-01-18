@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const OrderService = require("../services/orderService");
 const sendResponse = require("../utils/responseHandler");
 
@@ -31,6 +32,7 @@ class OrderController {
     }
   };
 
+
   getOrderById = async (req, res) => {
     try {
       const order = await this.orderService.getOrderById(req.params.id);
@@ -43,6 +45,10 @@ class OrderController {
   getAllOrders = async (req, res) => {
     try {
       const filters = req.query;
+      if (filters.user) {
+        filters.user = new mongoose.Types.ObjectId(filters.user);
+      }
+
       const orders = await this.orderService.getAllOrders(filters);
       sendResponse(res, 200, "Orders retrieved successfully", { orders });
     } catch (error) {
