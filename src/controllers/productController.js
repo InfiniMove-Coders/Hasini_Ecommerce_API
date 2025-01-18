@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const  mongoose = require("mongoose");
 const ProductService = require("../services/productService");
 
 class ProductController {
@@ -103,6 +103,7 @@ class ProductController {
       res.status(500).json({ message: error.message });
     }
   };
+
 }
 
 module.exports = new ProductController();
