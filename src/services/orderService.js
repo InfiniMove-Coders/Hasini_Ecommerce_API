@@ -44,8 +44,21 @@ class OrderService {
 
   getAllOrders = async (filters) => {
     try {
-      let { page, pageSize, ...queryFilters } = filters;
-      // console.log(page, pageSize, queryFilters);
+      let { page, pageSize, minPrice, maxPrice, ...queryFilters } = filters;
+
+      if (minPrice) {
+        queryFilters.totalPrice = {
+          ...(queryFilters.totalPrice || {}),
+          $gte: minPrice,
+        };
+      }
+
+      if (maxPrice) {
+        queryFilters.totalPrice = {
+          ...(queryFilters.totalPrice || {}),
+          $lte: maxPrice,
+        };
+      }
 
       return this.orderRepository.findAll(
         queryFilters,
