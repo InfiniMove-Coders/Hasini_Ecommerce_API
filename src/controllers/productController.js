@@ -55,32 +55,6 @@ class ProductController {
     }
   };
 
-  getProductsByCategory = async (req, res) => {
-    try {
-      const products = await this.productService.getProductsByCategory(
-        req.params.category,
-        req.query
-      );
-      res.status(200).json({
-        message: "Products retrieved successfully",
-        products,
-      });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
-  getActiveProducts = async (req, res) => {
-    try {
-      const products = await this.productService.getActiveProducts(req.query);
-      res.status(200).json({
-        message: "Active products retrieved successfully",
-        products,
-      });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
-
   updateProductById = async (req, res) => {
     try {
       const product = await this.productService.updateProductById(

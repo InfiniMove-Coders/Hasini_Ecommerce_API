@@ -41,34 +41,19 @@ class ProductService {
   async getAllProducts(query) {
     try {
       const { page, pageSize, minPrice, maxPrice, ...filters } = query;
-      if (minPrice) {
-        filters.price = { ...(filters.price || {}), $gte: minPrice };
-      }
 
-      if (maxPrice) {
-        filters.price = { ...(filters.price || {}), $lte: maxPrice };
+      if (!filters.price) { // price will take precedence over minPrice and maxPrice
+        if (minPrice) {
+          filters.price = { ...filters.price, $gte: minPrice };
+        }
+        if (maxPrice) {
+          filters.price = { ...filters.price, $lte: maxPrice };
+        }
       }
 
       return await this.productRepository.findAll(filters, { page, pageSize });
     } catch (error) {
       throw new Error(`Error while fetching all products: ${error.message}`);
-    }
-  }
-
-  async getProductsByCategory(category, options) {
-    try {
-      return await this.productRepository.findByCategory(category, options);
-    } catch (error) {
-      throw new Error(
-        `Error while fetching products by category: ${error.message}`
-      );
-    }
-  }
-  async getActiveProducts(options) {
-    try {
-      return await this.productRepository.findActiveProducts(options);
-    } catch (error) {
-      throw new Error(`Error while fetching active products: ${error.message}`);
     }
   }
 
