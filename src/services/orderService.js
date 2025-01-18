@@ -62,11 +62,9 @@ class OrderService {
 
       return this.orderRepository.findAll(
         queryFilters,
-        {
-          page,
-          pageSize,
-        },
-        "products.product user shippingAddress"
+        { page, pageSize},
+        "products.product user shippingAddress",
+        { createdAt: 1 }
       );
     } catch (error) {
       throw new Error("Failed to retrieve orders");

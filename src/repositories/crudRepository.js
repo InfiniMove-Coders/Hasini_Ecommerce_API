@@ -6,7 +6,7 @@ class CrudRepository {
   // Create a new document
   async create(data) {
     try {
-      const document =await this.model.create(data);
+      const document = await this.model.create(data);
       return document;
     } catch (error) {
       throw new Error(`Error creating document: ${error.message}`);
@@ -23,7 +23,12 @@ class CrudRepository {
   }
 
   // Find all documents (with optional filters)
-  async findAll(filters = {}, paginationOptions = {}, populateFields = "") {
+  async findAll(
+    filters = {},
+    paginationOptions = {},
+    populateFields = "",
+    sortOptions = { createdAt: -1 }
+  ) {
     try {
       let { page, pageSize } = paginationOptions;
       let skip = 0;
@@ -34,7 +39,7 @@ class CrudRepository {
       }
       return await this.model
         .find(filters)
-        .sort({ createdAt: -1 })
+        .sort(sortOptions)
         .skip(skip)
         .limit(pageSize)
         .populate(populateFields);
