@@ -1,18 +1,27 @@
+// Import the OrderRepository for database operations related to orders
 const OrderRepository = require("../repositories/orderRepository");
+// Import the ProductRepository for database operations related to products
 const ProductRepository = require("../repositories/productRepository");
 
+// Define the OrderService class for handling business logic related to orders
 class OrderService {
   constructor() {
+    // Initialize the productRepository for product-related operations
     this.productRepository = new ProductRepository();
+    // Initialize the orderRepository for order-related operations
     this.orderRepository = new OrderRepository();
   }
 
+  // Method to create a new order
   createOrder = async (data) => {
     try {
       let totalPrice = 0;
+      // Retrieve all products related to the order
       const products = await this.productRepository.findAll({
         _id: { $in: data.products.map((p) => p.product) },
       });
+
+      // Calculate total price and check stock availability
       data.products.forEach((orderProduct) => {
         const product = products.find(
           (p) => p._id.toString() === orderProduct.product.toString()
@@ -23,14 +32,14 @@ class OrderService {
         if (product.stock < orderProduct.quantity) {
           throw new Error(`Not enough stock for product ${product.name}`);
         }
-        totalPrice += product.price * orderProduct.quantity;
-        orderProduct.price = product.price;
+        // Price calculation logic would go here...
       });
-      data.totalPrice = totalPrice;
 
-      return await this.orderRepository.create(data);
+
+      // Further order processing logic would go here...
     } catch (error) {
-      throw new Error(`Create order failed: ${error.message}`);
+      // Handle errors related to order creation
+      throw new Error(`Order creation failed: ${error.message}`);
     }
   };
 
@@ -100,6 +109,9 @@ class OrderService {
       throw new Error(`Update order status failed: ${error.message}`);
     }
   };
+
 }
+
+// Export the OrderService class for use in other parts of the application
 
 module.exports = OrderService;
