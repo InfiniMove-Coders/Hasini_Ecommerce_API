@@ -1,4 +1,4 @@
-const  mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const ProductService = require("../services/productService");
 
 class ProductController {
@@ -40,11 +40,36 @@ class ProductController {
 
   getAllProducts = async (req, res) => {
     try {
-      const filters = req.query;
-      if (filters.category){
-        filters.category = new mongoose.Types.ObjectId(filters.category);
+      const filters = {};
+
+      // Example: Filtering by category
+      // GET /products?category=someCategoryId
+      if (req.query.category) {
+        filters.category = new mongoose.Types.ObjectId(req.query.category);
       }
+
+      // Example: Filtering by brand
+      // GET /products?brand=Apple
+      if (req.query.brand) {
+        filters.brand = req.query.brand;
+      }
+
+      // Example: Filtering by price range
+      // GET /products?minprice=500
+      // GET /products?maxprice=1500
+      // GET /products?minprice=500&maxprice=1500&brand=Samsung
+      if (req.query.minprice || req.query.maxprice) {
+        filters.price = {};
+        if (req.query.minprice)
+          filters.price.$gte = parseFloat(req.query.minprice);
+        if (req.query.maxprice)
+          filters.price.$lte = parseFloat(req.query.maxprice);
+      }
+
       const products = await this.productService.getAllProducts(filters);
+
+      // Example: Combination of filters
+      // GET /products?category=someCategoryId&minprice=1000
       res.status(200).json({
         message: "Products retrieved successfully",
         products,
@@ -103,7 +128,6 @@ class ProductController {
       res.status(500).json({ message: error.message });
     }
   };
-
 }
 
 module.exports = new ProductController();
