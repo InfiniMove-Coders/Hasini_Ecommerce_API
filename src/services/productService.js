@@ -64,20 +64,6 @@ class ProductService {
       );
     }
   }
-
-  async updateProductStock(productId, stock) {
-    try {
-      const product = await this.productRepository.updateStock(
-        productId,
-        stock
-      );
-      if (!product) throw new Error("Product not found");
-      return product;
-    } catch (error) {
-      throw new Error(`Error while updating product stock: ${error.message}`);
-    }
-  }
-
   async getActiveProducts(options) {
     try {
       return await this.productRepository.findActiveProducts(options);

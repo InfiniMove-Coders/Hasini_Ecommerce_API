@@ -6,8 +6,8 @@ class CrudRepository {
   // Create a new document
   async create(data) {
     try {
-      const document = new this.model(data);
-      return await document.save();
+      const document =await this.model.create(data);
+      return document;
     } catch (error) {
       throw new Error(`Error creating document: ${error.message}`);
     }

@@ -48,16 +48,7 @@ const orderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Address",
       required: true,
-    },
-    // paymentMethod: {
-    //   type: String,
-    //   enum: ["Credit Card", "PayPal", "Cash on Delivery"],
-    //   required: true,
-    // },
-    // paymentStatus: {
-    //   type: Boolean,
-    //   default: false,
-    // },
+    }
   },
   { timestamps: true }
 );

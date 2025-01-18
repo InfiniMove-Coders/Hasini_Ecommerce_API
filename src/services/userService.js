@@ -30,7 +30,7 @@ const login = async ({ phoneNumber }) => {
         role:user.role
       },
       process.env.JWT_SECRET_KEY,
-      { expiresIn: "1h" }
+      { expiresIn: "10h" }
     );
 
     return token;
