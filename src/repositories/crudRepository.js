@@ -26,8 +26,9 @@ class CrudRepository {
   async findAll(
     filters = {},
     paginationOptions = {},
-    populateFields = "",
-    sortOptions = { createdAt: -1 }
+    populateOptions = {},
+    sortOptions = { createdAt: -1 },
+    projectionFields = ""
   ) {
     try {
       let { page, pageSize } = paginationOptions;
@@ -38,11 +39,11 @@ class CrudRepository {
         skip = pageSize * (page - 1);
       }
       return await this.model
-        .find(filters)
+        .find(filters, projectionFields)
         .sort(sortOptions)
         .skip(skip)
         .limit(pageSize)
-        .populate(populateFields);
+        .populate(populateOptions);
     } catch (error) {
       throw new Error(`Error finding documents: ${error.message}`);
     }

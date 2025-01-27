@@ -51,7 +51,7 @@ class ProductService {
         }
       }
 
-      return await this.productRepository.findAll(filters, { page, pageSize });
+      return await this.productRepository.findAll(filters, { page, pageSize }, null, null, "-ratings");
     } catch (error) {
       throw new Error(`Error while fetching all products: ${error.message}`);
     }
