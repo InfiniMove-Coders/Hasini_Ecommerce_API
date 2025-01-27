@@ -41,6 +41,12 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  discount: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 100,
+  },
 }, { timestamps: true });
 
 const Product = mongoose.model("Product", productSchema);

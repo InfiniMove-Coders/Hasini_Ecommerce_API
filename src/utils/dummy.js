@@ -119,3 +119,15 @@ mongoose
     console.error("Error inserting data:", error);
     mongoose.disconnect();
   });
+
+  // {
+  //   "products": [
+  //     {
+  //       "product": "6751e319ab152ef60b79b942",
+  //       "quantity": 1
+  //     }
+  //   ],
+  //   "deliveryTimeSlot": "09:00 AM - 12:00 PM",
+  //   "deliveryAt": "2024-12-20",
+  //   "shippingAddress": "67641cc91f44d208205eee9f"
+  // }
