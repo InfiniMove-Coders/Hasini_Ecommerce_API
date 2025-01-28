@@ -24,8 +24,9 @@ class OrderService {
         if (product.stock < orderProduct.quantity) {
           throw new Error(`Not enough stock for product ${product.name}`);
         }
-        totalPrice += product.price * orderProduct.quantity;
+        totalPrice += (product.price * orderProduct.quantity - (product.discount / 100) * product.price);
         orderProduct.price = product.price;
+        orderProduct.discount = product.discount;
       });
       data.totalPrice = totalPrice;
 

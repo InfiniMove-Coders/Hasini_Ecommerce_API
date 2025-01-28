@@ -51,7 +51,7 @@ class CrudRepository {
   // Update a document by ID
   async updateById(id, updateData) {
     try {
-      return await this.model.findByIdAndUpdate(id, updateData, { new: true });
+      return await this.model.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
     } catch (error) {
       throw new Error(`Error updating document by ID: ${error.message}`);
     }
