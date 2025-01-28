@@ -79,6 +79,25 @@ class ProductController {
     }
   };
 
+  addNewRating = async (req, res) => {
+    try {
+      if (!req.body.rating) {
+        return res.status(400).json({ message: "Rating is required" });
+      }
+      const product = await this.productService.addNewRating(
+        req.params.id,
+        parseInt(req.body.rating),
+        req.user._id
+      );
+      res.status(200).json({
+        message: "Rating added successfully",
+        product,
+      });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+
 }
 
 module.exports = new ProductController();

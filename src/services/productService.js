@@ -78,6 +78,23 @@ class ProductService {
       throw new Error(`Error while deleting product: ${error.message}`);
     }
   }
+
+  async addNewRating(productId, rating, user) {
+    try {
+      const product = await this.productRepository.findById(productId);
+      if (!product) throw new Error("Product not found");
+
+      const pos = await this.productRepository.getUserRatingPos(product, user);
+      if (pos == -1) {
+        return await this.productRepository.addNewRating(product, user, rating);
+      }
+      return await this.productRepository.updateRating(product, pos, rating);
+      
+    } catch (error) {
+      throw new Error(`Error while adding rating to product: ${error.message}`);
+    }
+  }
+
 }
 
 module.exports = ProductService;
