@@ -74,7 +74,7 @@ class OrderService {
       return this.orderRepository.findAll(
         queryFilters,
         { page, pageSize},
-        "products.product user shippingAddress",
+        { path: "products.product user shippingAddress", select: "-ratings" },
         { createdAt: 1 }
       );
     } catch (error) {
